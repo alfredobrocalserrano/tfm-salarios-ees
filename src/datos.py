@@ -56,6 +56,23 @@ def media_ponderada(valores: pd.Series, pesos: pd.Series) -> float:
     return float(np.average(valores, weights=pesos))
 
 
+def cargar_dataset_procesado() -> pd.DataFrame:
+    """Devuelve el dataset unificado y etiquetado que genera el notebook 01.
+
+    Si el fichero procesado no existe (por ejemplo, en una sesión nueva de Colab),
+    lo vuelve a generar a partir de los microdatos originales.
+    """
+    from src.etiquetas import aplicar_etiquetas
+
+    ruta = DATA_PROCESSED / "ees_2018_2022.parquet"
+    if ruta.exists():
+        return pd.read_parquet(ruta)
+    df = aplicar_etiquetas(cargar_ees_unificada())
+    DATA_PROCESSED.mkdir(parents=True, exist_ok=True)
+    df.to_parquet(ruta, index=False)
+    return df
+
+
 def cargar_ees_unificada() -> pd.DataFrame:
     """Lee 2018 y 2022, calcula el salario anual y los apila en una sola tabla."""
     partes = []
