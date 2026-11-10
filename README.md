@@ -31,7 +31,18 @@ reports/figures/   gráficos para la memoria
    ```
    pip install -r requirements.txt
    ```
-4. Ejecutar los notebooks en orden desde la carpeta `notebooks/`.
+4. Ejecutar los notebooks en orden (`notebooks/01_...`, `02_...`, etc.).
+
+### En Google Colab
+
+```python
+!git clone https://github.com/alfredobrocalserrano/tfm-salarios-ees
+%cd tfm-salarios-ees
+!pip install -q -r requirements.txt
+# Subir md_EES_2018.parquet y md_EES_2022.parquet a tfm-salarios-ees/data/raw/
+```
+
+Después, abrir los notebooks desde la carpeta `notebooks/`.
 
 ## Fuente de los datos
 

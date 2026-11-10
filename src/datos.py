@@ -23,7 +23,14 @@ COMPONENTES_SALARIO = ["RETRINOIN", "RETRIIN", "VESPNOIN", "VESPIN"]
 
 def leer_ees(anio: int, carpeta: Path = DATA_RAW) -> pd.DataFrame:
     """Lee el fichero parquet de microdatos de un año y añade la columna `anio`."""
-    df = pd.read_parquet(carpeta / f"md_EES_{anio}.parquet")
+    ruta = carpeta / f"md_EES_{anio}.parquet"
+    if not ruta.exists():
+        raise FileNotFoundError(
+            f"No se encuentra {ruta}.\n"
+            f"Descarga los microdatos de la Encuesta de Estructura Salarial {anio} desde el INE "
+            f"(ver README, apartado 'Cómo reproducirlo') y copia md_EES_{anio}.parquet en {carpeta}"
+        )
+    df = pd.read_parquet(ruta)
     df["anio"] = anio
     return df
 
