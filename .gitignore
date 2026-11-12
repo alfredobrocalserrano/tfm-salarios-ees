@@ -19,3 +19,7 @@ venv/
 .DS_Store
 Thumbs.db
 .env
+
+# Modelos entrenados (se generan con el notebook 04)
+models/*
+!models/.gitkeep

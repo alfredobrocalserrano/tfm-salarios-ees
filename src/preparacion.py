@@ -37,6 +37,9 @@ GRUPO = "IDENCCC"  # centro de cotización: los trabajadores de una misma empres
 # Códigos de tamaño que el INE agrupa por anonimización y no corresponden a un tamaño concreto
 TAMANOS_SIN_DESAGREGAR = ["Sin desagregar (todos los tamaños)", "50 o más (sin desagregar)"]
 
+# Ocupaciones con tan pocos registros que el modelo no puede estimarlas (28 en 2022, casi todos de un centro)
+OCUPACIONES_EXCLUIDAS = ["Ocupaciones militares"]
+
 PERCENTIL_RECORTE = 0.999
 
 CARPETA_MODELO = DATA_PROCESSED / "modelo"
@@ -83,6 +86,11 @@ def preparar(df: pd.DataFrame):
     registro["excluidos_tamano_sin_desagregar"] = int(sin_desagregar.sum())
     df = df[~sin_desagregar].copy()
     df["tamano_empresa"] = df["tamano_empresa"].cat.remove_categories(TAMANOS_SIN_DESAGREGAR)
+
+    excluidas = df["ocupacion"].isin(OCUPACIONES_EXCLUIDAS)
+    registro["excluidos_ocupaciones_militares"] = int(excluidas.sum())
+    df = df[~excluidas].copy()
+    df["ocupacion"] = df["ocupacion"].cat.remove_categories(OCUPACIONES_EXCLUIDAS)
 
     registro["recortados_por_arriba"] = {
         int(a): int((g["salario_real"] > cuantil_ponderado(g["salario_real"], g[PESO], PERCENTIL_RECORTE)).sum())
